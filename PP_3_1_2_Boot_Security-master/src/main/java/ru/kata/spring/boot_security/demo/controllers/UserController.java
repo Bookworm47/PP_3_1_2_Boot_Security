@@ -7,9 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
+
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -19,9 +20,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String showAllUsers(Model model) {
-        model.addAttribute("allUsers", userService.allUsers());
-        return ("user");
+    @GetMapping("/user")
+    public String pageForAuthenticatedUsers(Model model, Principal principal) {
+        model.addAttribute("user", userService.getUserByUsername(principal.getName()));
+        return "user";
     }
 }

@@ -15,7 +15,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String username;
+    private String name;
     @Column
     private String surname;
     @Column
@@ -23,9 +23,11 @@ public class User implements UserDetails {
     @Column
     private String email;
     @Column
+    private String username;
+    @Column
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
@@ -33,21 +35,14 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String surname, int age, String email, String password, Set<Role> roles) {
-        this.username = name;
+    public User(String name, String surname, int age, String email, String username, String password, Set<Role> roles) {
+        this.name = name;
         this.surname = surname;
         this.age = age;
         this.email = email;
+        this.username = username;
+        this.password = password;
         this.roles = roles;
-        this.password = password;
-    }
-
-    public User(String name, String surname, int age, String email, String password) {
-        this.username = name;
-        this.surname = surname;
-        this.age = age;
-        this.email = email;
-        this.password = password;
     }
 
     public Long getId() {
@@ -58,13 +53,20 @@ public class User implements UserDetails {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String getUsername() {
         return username;
     }
 
-    public void setName(String name) {
-        this.username = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSurname() {
@@ -99,7 +101,8 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
+    // как сделать через  Set
+    public Set<Role> getRoles() {
         return roles;
     }
 
@@ -109,7 +112,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles();
     }
 
 
@@ -137,9 +140,12 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + username + '\'' +
+                ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
+                ", email=" + email +
+                ", username=" + username +
+                ", roles=" + roles +
                 '}';
     }
 }

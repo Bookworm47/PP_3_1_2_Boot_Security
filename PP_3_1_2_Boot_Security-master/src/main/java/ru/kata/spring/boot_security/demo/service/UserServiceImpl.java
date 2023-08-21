@@ -1,11 +1,13 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 
@@ -13,34 +15,49 @@ import java.util.List;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private final UserDAO userDAO;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
+    {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void addUser(User user) {
-        userDAO.addUser(user);
+        String pw = passwordEncoder.encode(user.getPassword());
+        user.setPassword(pw);
+        userRepository.save(user);
     }
     @Override
     public void updateUser( User user) {
-        userDAO.updateUser(user);
+        String pw = passwordEncoder.encode(user.getPassword());
+        user.setPassword(pw);
+        userRepository.save(user);
 
     }
     @Override
     public void deleteUser(Long id) {
-        userDAO.deleteUser(id);
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+        }
 
     }
     @Override
     public List<User> allUsers() {
-        return userDAO.allUsers();
+        return userRepository.findAll();
     }
 
     @Override
     public User getUser(Long id) {
-        return userDAO.getUser(id);
+        return userRepository.getById(id);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

@@ -6,9 +6,9 @@
 </head>
 <body>
 <h1>Add User</h1>
-<form th:method="POST" th:action="@{/}" th:object="${user}">
+<form th:method="POST" th:action="@{/admin/a}" th:object="${user}">
     <label for="name">Enter your name: </label>
-    <input type="text" th:field="*{username}" id="name">
+    <input type="text" th:field="*{name}" id="name">
     <br><br>
     <label for="surname">Enter your surname: </label>
     <input type="text" th:field="*{surname}" id="surname">
@@ -18,6 +18,12 @@
     <br><br>
     <label for="email">Enter your email: </label>
     <input type="text" th:field="*{email}" id="email">
+    <br><br>
+    <label for="username">Enter your username: </label>
+    <input type="text" th:field="*{username}" id="username">
+    <br><br>
+    <label for="password">Enter your password: </label>
+    <input type="text" th:field="*{password}" id="password">
     <br><br>
 
     <input type="submit" value="Create!">
