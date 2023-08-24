@@ -7,7 +7,7 @@
 <body>
 
 <form th:method="PUT" th:action="@{/admin/{id}(id = ${user.getId()})}" th:object="${user}">
-<!--    <input type="hidden" name="_method" value="PATCH">-->
+    <!--    <input type="hidden" name="_method" value="PATCH">-->
     <label for="name">Enter your name: </label>
     <input type="text" th:field="*{name}" id="name">
     <br><br>
@@ -28,7 +28,7 @@
     <br><br>
     <label>Roles:
         <input type="checkbox" name="role"
-               th:each="role : ${role}"
+               th:each="role : ${roles}"
                th:text="${role.name}"
                th:value="${role.id}"
                th:field="*{roles}"

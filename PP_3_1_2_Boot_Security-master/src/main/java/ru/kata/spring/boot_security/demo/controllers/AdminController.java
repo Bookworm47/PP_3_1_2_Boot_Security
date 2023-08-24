@@ -5,12 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
-import ru.kata.spring.boot_security.demo.service.UserService;
-import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,9 +24,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private UserDetailsServiceImpl userDetailsServiceImpl;
     private final UserService userService;
     private final RoleService roleService;
+
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
         this.roleService = roleService;
@@ -32,12 +37,14 @@ public class AdminController {
     public String showAllUsers(Model model) {
         List<Role> roles = roleService.allRoles();
         model.addAttribute("allUsers", userService.allUsers());
-        model.addAttribute("role", roles);
-        return ("allUsers");
+        model.addAttribute("roles", roles);
+        return "allUsers";
     }
 
     @GetMapping("/newUser")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(@ModelAttribute("user") User user,
+                          Model model) {
+        model.addAttribute("roles", roleService.allRoles());
         return "addUser";
     }
 
@@ -50,7 +57,7 @@ public class AdminController {
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable("id") Long id) {
         model.addAttribute("user", userService.getUser(id));
-        model.addAttribute("role", roleService.allRoles());
+        model.addAttribute("roles", roleService.allRoles());
         return "edit";
     }
 

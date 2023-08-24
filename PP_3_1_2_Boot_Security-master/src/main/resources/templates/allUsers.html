@@ -27,7 +27,7 @@
         <td th:text="${user.getRoles()}"></td>
         <td>
             <a th:href="@{/admin/edit/{id}(id=${user.getId()})}">
-            <button>Edit</button>
+                <button>Edit</button>
             </a>
             <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
                 <button>Delete</button>

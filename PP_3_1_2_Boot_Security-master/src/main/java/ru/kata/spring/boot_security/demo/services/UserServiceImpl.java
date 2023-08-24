@@ -1,13 +1,12 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 
@@ -20,8 +19,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder)
-    {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -32,13 +31,15 @@ public class UserServiceImpl implements UserService {
         user.setPassword(pw);
         userRepository.save(user);
     }
+
     @Override
-    public void updateUser( User user) {
+    public void updateUser(User user) {
         String pw = passwordEncoder.encode(user.getPassword());
         user.setPassword(pw);
         userRepository.save(user);
 
     }
+
     @Override
     public void deleteUser(Long id) {
         if (userRepository.findById(id).isPresent()) {
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
     @Override
     public List<User> allUsers() {
         return userRepository.findAll();
